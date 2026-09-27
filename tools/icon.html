@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>icon</title>
+<style>html, body { margin: 0; background: transparent; overflow: hidden; } canvas { display: block; }</style></head>
+<body><canvas id="c"></canvas>
+<script src="../js/draw.js"></script>
+<script>
+// The app icon, drawn with the games' own pictures.
+// ?size=512  ?mask=1 (maskable: full square, picture kept inside the safe zone)
+// Saved as PNG with headless Chrome (see tools/make-icons.ps1).
+var q = new URLSearchParams(location.search), size = +q.get('size') || 512, mask = q.get('mask') === '1';
+var c = document.getElementById('c'), g = c.getContext('2d');
+c.width = c.height = size;
+g.scale(size / 100, size / 100);
+var bgGrad = g.createLinearGradient(0, 0, 0, 100);
+bgGrad.addColorStop(0, '#9fe8d2'); bgGrad.addColorStop(1, '#f1fffb');
+if (mask) { g.fillStyle = bgGrad; g.fillRect(0, 0, 100, 100); }
+else { Draw.roundRect(g, 0, 0, 100, 100, 22); g.fillStyle = bgGrad; g.fill(); g.save(); Draw.roundRect(g, 0, 0, 100, 100, 22); g.clip(); }
+if (mask) g.save();
+if (mask) { g.translate(50, 50); g.scale(0.8, 0.8); g.translate(-50, -50); }
+// rainbow
+['#ffb3c7', '#ffd59e', '#fff3a3', '#bff0b0', '#b3dcff', '#d7c2ff'].forEach(function (col, k) {
+  g.beginPath(); g.arc(50, 74, 44 - k * 4.2, Math.PI, 0); g.strokeStyle = col; g.lineWidth = 4.4; g.stroke();
+});
+// balloons
+function balloon(x, y, r, col) {
+  g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x, y + r); g.quadraticCurveTo(x + 3, y + r * 1.8, x - 1, y + r * 2.6); Draw.paint(g, null, 'rgba(90,56,37,.5)', 1);
+  Draw.ellipse(g, x, y, r * 0.86, r); Draw.paint(g, col, Draw.INK, 1.6);
+  Draw.ellipse(g, x - r * 0.35, y - r * 0.4, r * 0.2, r * 0.13, -0.7); Draw.paint(g, 'rgba(255,255,255,.85)');
+}
+balloon(15, 22, 8, '#ff94c2');
+balloon(85, 18, 8, '#ffd23d');
+balloon(76, 38, 6.5, '#66c3ff');
+// cloud
+[[-32, 2, 9], [-17, -2, 11], [0, -4, 12], [17, -2, 11], [32, 2, 9], [-22, 6, 9], [-4, 7, 10], [14, 7, 10], [26, 6, 8]].forEach(function (p) {
+  Draw.circle(g, 50 + p[0], 80 + p[1], p[2]); Draw.paint(g, null, '#8fb9e0', 2.6);
+});
+[[-32, 2, 9], [-17, -2, 11], [0, -4, 12], [17, -2, 11], [32, 2, 9], [-22, 6, 9], [-4, 7, 10], [14, 7, 10], [26, 6, 8]].forEach(function (p) {
+  Draw.circle(g, 50 + p[0], 80 + p[1], p[2]); Draw.paint(g, '#ffffff');
+});
+// ケロちゃん
+g.save(); g.translate(50, 52); g.scale(0.44, 0.44); g.translate(-180, -300);
+Draw.critter(g, { x: 180, y: 300, t: 0, kind: 'frog', look: { x: 180, y: 270 }, open: 0, mode: 'idle' });
+g.restore();
+Draw.chick(g, 22, 72, 0.55, 0, { shell: 0, happy: true });
+Draw.chick(g, 79, 73, 0.5, 0, { shell: 2, happy: true, dir: -1 });
+g.restore();
+document.title = 'ready';
+</script></body></html>

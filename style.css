@@ -1,0 +1,74 @@
+:root {
+  --ink: #5a3825;
+  --cream: #fffaf2;
+  --font: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', 'Noto Sans JP', sans-serif;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #aef0dd; overscroll-behavior: none; }
+body { font-family: var(--font); color: var(--ink); touch-action: none; }
+
+#scene { position: fixed; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+#stage { position: fixed; left: 0; top: 0; width: 360px; height: 640px; transform-origin: 0 0; }
+[hidden] { display: none !important; }
+
+/* ---------- buttons ---------- */
+.btn {
+  font: 800 18px/1 var(--font); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 999px;
+  background: linear-gradient(#ffffff 55%, #ffe6f1);
+  box-shadow: 0 5px 0 var(--ink);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 16px; height: 50px; cursor: pointer; white-space: nowrap;
+}
+.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.btn svg { width: 20px; height: 20px; display: block; }
+.btn .ic { display: inline-flex; }
+.btn.small { height: 40px; font-size: 14px; padding: 0 12px; }
+#btn-install { position: absolute; right: 12px; top: 12px; }
+
+/* ---------- title ---------- */
+.logo { position: absolute; left: 0; right: 0; top: 40px; margin: 0; text-align: center; font-weight: 800; line-height: 1.02; }
+.logo span { display: block; }
+.logo b {
+  display: inline-block; font-size: 60px; font-weight: 800; color: #fff;
+  -webkit-text-stroke: 10px var(--ink); paint-order: stroke fill;
+  animation: hop 2.6s ease-in-out infinite; animation-delay: calc(var(--d) * .12s);
+}
+.logo .l2 b { font-size: 64px; }
+.logo .l1 b:nth-child(1) { color: #86d65c; }
+.logo .l1 b:nth-child(2) { color: #ff8fc0; }
+.logo .l1 b:nth-child(3) { color: #ffb347; }
+.logo .l1 b:nth-child(4) { color: #6cc6ff; }
+.logo .l1 b:nth-child(5) { color: #b58cff; }
+.logo .l2 b:nth-child(1) { color: #ffd23d; }
+.logo .l2 b:nth-child(2) { color: #ff8fc0; }
+.logo .l2 b:nth-child(3) { color: #6cc6ff; }
+.sub {
+  position: absolute; left: 0; right: 0; top: 186px; margin: 0 auto; width: max-content;
+  padding: 7px 16px; font-size: 16px; font-weight: 800;
+  background: rgba(255, 255, 255, .88); border: 3px solid var(--ink); border-radius: 999px;
+}
+
+/* ---------- games ---------- */
+.games {
+  position: absolute; left: 14px; right: 14px; top: 366px; bottom: 6px;
+  display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 214px; gap: 12px;
+  overflow-y: auto; padding: 2px 0 12px; touch-action: pan-y; scrollbar-width: none;
+}
+.games::-webkit-scrollbar { display: none; }
+.game {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px;
+  padding: 12px 6px 10px; text-decoration: none; color: var(--ink); cursor: pointer;
+  background: linear-gradient(160deg, var(--c1), var(--c2));
+  border: 3px solid var(--ink); border-radius: 26px; box-shadow: 0 6px 0 var(--ink);
+  transition: transform .06s ease-out, box-shadow .06s ease-out;
+}
+.game:active, .game.go { transform: translateY(5px); box-shadow: 0 1px 0 var(--ink); }
+.game img {
+  width: 124px; height: 124px; border-radius: 28px; display: block;
+  border: 3px solid var(--ink); background: #fff; box-shadow: 0 3px 0 rgba(90, 56, 37, .25);
+}
+.game-name { font-size: 17px; font-weight: 800; line-height: 1.25; text-align: center; white-space: pre-line; }
+
+@keyframes hop { 0%, 55%, 100% { transform: translateY(0); } 25% { transform: translateY(-9px) rotate(-5deg); } 40% { transform: translateY(1px); } }
