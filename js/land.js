@@ -9,7 +9,8 @@
   var GAMES = [
     { name: 'ケロちゃん\nもぐもぐ', url: '/kero-mogumogu/', icon: '/kero-mogumogu/icons/icon-192.png', c1: '#c4ebff', c2: '#f0faff' },
     { name: 'ケロちゃん\nぴよぴよポン', url: '/kero-piyopiyo/', icon: '/kero-piyopiyo/icons/icon-192.png', c1: '#ffe99e', c2: '#fffbe8' },
-    { name: 'ケロちゃん\nあたま ぐんぐん', url: '/kero-gungun/', icon: '/kero-gungun/icons/icon-192.png', c1: '#ffd3e6', c2: '#fff6fb' }
+    { name: 'ケロちゃん\nあたま ぐんぐん', url: '/kero-gungun/', icon: '/kero-gungun/icons/icon-192.png', c1: '#ffd3e6', c2: '#fff6fb' },
+    { name: 'ケロちゃん\nみるみる', url: '/kero-mirumiru/', icon: '/kero-mirumiru/icons/icon-192.png', c1: '#bff3e2', c2: '#f1fffb' }
   ];
 
   // ---------------------------------------------------------------- view (the 360 x 640 stage, scaled to fit)

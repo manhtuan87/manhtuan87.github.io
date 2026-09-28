@@ -15,7 +15,8 @@ Lang.add({
   'とじる': ['Đóng', 'Close', '닫기'],
   'ケロちゃん\nもぐもぐ': ['Kero\nMăm Măm', 'Kero\nMunch Munch', '케로\n냠냠'],
   'ケロちゃん\nぴよぴよポン': ['Kero\nChíp Chíp Bùm', 'Kero\nChick Pop', '케로\n삐약삐약 퐁'],
-  'ケロちゃん\nあたま ぐんぐん': ['Kero\nLuyện Não', 'Kero\nBrain Boost', '케로\n두뇌 쑥쑥']
+  'ケロちゃん\nあたま ぐんぐん': ['Kero\nLuyện Não', 'Kero\nBrain Boost', '케로\n두뇌 쑥쑥'],
+  'ケロちゃん\nみるみる': ['Kero\nMắt Tinh', 'Kero\nQuick Eyes', '케로\n반짝눈']
 });
 
 // The big title, one line per row (each letter hops on its own).

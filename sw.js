@@ -6,7 +6,7 @@
    Bump VERSION whenever the menu changes. The menu looks for new versions (of itself and of
    every game) whenever it is opened or comes back to the front; new files are fetched straight
    from the server, never from the browser's own cache. */
-var VERSION = 'land-v5';
+var VERSION = 'land-v6';
 var FONTS = 'land-fonts';
 var FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest', 'offline.html',
@@ -17,7 +17,8 @@ var FILES = [
 var GAME_ICONS = [
   '/kero-mogumogu/icons/icon-192.png',
   '/kero-piyopiyo/icons/icon-192.png',
-  '/kero-gungun/icons/icon-192.png'
+  '/kero-gungun/icons/icon-192.png',
+  '/kero-mirumiru/icons/icon-192.png'
 ];
 
 var BASE = new URL('./', self.location).href;
