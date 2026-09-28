@@ -18,13 +18,28 @@
 <body>
 <canvas id="scene"></canvas>
 <div id="stage">
+  <div id="scroller" class="scroller">
+    <h1 class="logo">
+      <span class="l1"><b style="--d:0">ケ</b><b style="--d:1">ロ</b><b style="--d:2">ち</b><b style="--d:3">ゃ</b><b style="--d:4">ん</b></span>
+      <span class="l2"><b style="--d:5">ラ</b><b style="--d:6">ン</b><b style="--d:7">ド</b></span>
+    </h1>
+    <p id="sub" class="sub">あそびたい ゲームを えらんでね！</p>
+    <div class="island-space" aria-hidden="true"></div>
+    <div id="games" class="games"></div>
+  </div>
+  <button id="btn-name" class="btn small name-btn"><span class="ic" data-icon="pencil"></span><span id="name-label">なまえ</span></button>
   <button id="btn-install" class="btn small install" hidden><span class="ic" data-icon="install"></span>ホームに ついか</button>
-  <h1 class="logo">
-    <span class="l1"><b style="--d:0">ケ</b><b style="--d:1">ロ</b><b style="--d:2">ち</b><b style="--d:3">ゃ</b><b style="--d:4">ん</b></span>
-    <span class="l2"><b style="--d:5">ラ</b><b style="--d:6">ン</b><b style="--d:7">ド</b></span>
-  </h1>
-  <p class="sub">あそびたい ゲームを えらんでね！</p>
-  <div id="games" class="games"></div>
+  <div id="name-panel" class="panel">
+    <div class="panel-card">
+      <div class="panel-title">なまえ（ニックネーム）</div>
+      <p class="panel-note">ぜんぶの ゲームに でるよ</p>
+      <input id="name-input" class="name-input" type="text" maxlength="10" autocomplete="off" placeholder="れい：はなこちゃん">
+      <div class="panel-row">
+        <button id="name-cancel" class="btn">やめる</button>
+        <button id="name-ok" class="btn ok">OK</button>
+      </div>
+    </div>
+  </div>
 </div>
 <script src="js/draw.js"></script>
 <script src="js/land.js"></script>

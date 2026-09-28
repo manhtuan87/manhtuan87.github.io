@@ -4,7 +4,7 @@
    everything else goes to the network (or to each game's own worker, which takes over
    once that game has been opened). Only caches named "land-..." are ever deleted here.
    Bump VERSION whenever the menu changes. */
-var VERSION = 'land-v2';
+var VERSION = 'land-v3';
 var FONTS = 'land-fonts';
 var FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest', 'offline.html',

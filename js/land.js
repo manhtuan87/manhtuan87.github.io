@@ -14,15 +14,18 @@
 
   // ---------------------------------------------------------------- view (the 360 x 640 stage, scaled to fit)
 
-  var canvas = $('scene'), ctx = canvas.getContext('2d'), stageEl = $('stage');
+  var canvas = $('scene'), ctx = canvas.getContext('2d'), stageEl = $('stage'), scroller = $('scroller');
   var view = { cw: 1, ch: 1, dpr: 1, s: 1, ox: 0, oy: 0 }, bg = null;
 
+  // The menu scrolls, so the stage starts at the top of the screen and reaches the bottom
+  // (taller than 640 on tall phones).
   function resize() {
     var cw = window.innerWidth, ch = window.innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
     canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
     var s = Math.min(cw / W, ch / H);
-    view = { cw: cw, ch: ch, dpr: dpr, s: s, ox: (cw - W * s) / 2, oy: (ch - H * s) / 2 };
-    stageEl.style.transform = 'translate(' + view.ox + 'px,' + view.oy + 'px) scale(' + s + ')';
+    view = { cw: cw, ch: ch, dpr: dpr, s: s, ox: (cw - W * s) / 2, oy: 0 };
+    stageEl.style.height = Math.max(H, ch / s) + 'px';
+    stageEl.style.transform = 'translate(' + view.ox + 'px,0) scale(' + s + ')';
     bg = null;
   }
   function worldTransform(c) { c.setTransform(view.dpr * view.s, 0, 0, view.dpr * view.s, view.dpr * view.ox, view.dpr * view.oy); }
@@ -106,6 +109,8 @@
     var c = ctx, sc = scene, t = sc.t, f = sc.crit;
     worldTransform(c);
     sc.balloons.forEach(function (b) { balloon(c, b, t); });
+    // the island scrolls with the page (it sits in the gap between the title and the games)
+    c.translate(0, 18 - scroller.scrollTop);
     island(c, 180, 344);
     c.save(); c.translate(180, 296); c.scale(0.8, 0.8); c.translate(-180, -296);
     D.critter(c, { x: 180, y: 296, t: t, kind: 'frog', look: f.look, mode: f.mode, mt: f.mt, blink: f.blink });
@@ -119,7 +124,10 @@
   // ---------------------------------------------------------------- the games
 
   var ac = null;
+  // (silent on the PC, localhost, so trying the site there makes no sound)
+  var QUIET = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   function click() {
+    if (QUIET) return;
     try {
       if (!ac) { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; ac = new AC(); }
       var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
@@ -193,7 +201,10 @@
 
   // ---------------------------------------------------------------- icons & install
 
-  var ICONS = { install: '<path d="M12 4v10M7.5 9.5 12 14l4.5-4.5M5 19h14"/>' };
+  var ICONS = {
+    install: '<path d="M12 4v10M7.5 9.5 12 14l4.5-4.5M5 19h14"/>',
+    pencil: '<path d="M4.5 19.5l1.2-4.4L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.9 18.3z"/><path d="M13.6 7.2l3.2 3.2"/>'
+  };
   document.querySelectorAll('[data-icon]').forEach(function (el) {
     el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[el.getAttribute('data-icon')] + '</svg>';
   });
@@ -206,6 +217,31 @@
     installEvt.userChoice.then(function () { installEvt = null; $('btn-install').hidden = true; });
   });
   window.addEventListener('appinstalled', function () { $('btn-install').hidden = true; });
+
+  // ---------------------------------------------------------------- nickname, shared by every game on the site
+  // Saved once here; the games read the same key ('kero-name') and show it on their title screens.
+
+  var NAME_KEY = 'kero-name', NAME_MAX = 10;
+  function getName() { try { return (localStorage.getItem(NAME_KEY) || '').trim().slice(0, NAME_MAX); } catch (e) { return ''; } }
+  function setName(v) { try { if (v) localStorage.setItem(NAME_KEY, v); else localStorage.removeItem(NAME_KEY); } catch (e) { /* ignore */ } }
+  function refreshName() {
+    var n = getName();
+    $('name-label').textContent = n || 'なまえ';
+    $('sub').textContent = n ? n + '、ゲームを えらんでね！' : 'あそびたい ゲームを えらんでね！';
+  }
+  $('btn-name').addEventListener('click', function () {
+    click();
+    $('name-input').value = getName();
+    $('name-panel').classList.add('on');
+  });
+  $('name-cancel').addEventListener('click', function () { click(); $('name-panel').classList.remove('on'); });
+  $('name-ok').addEventListener('click', function () {
+    click();
+    setName($('name-input').value.trim().slice(0, NAME_MAX));
+    $('name-panel').classList.remove('on');
+    refreshName();
+    scene.crit.mode = 'happy'; scene.crit.mt = 0;
+  });
 
   // ---------------------------------------------------------------- start
 
@@ -221,6 +257,7 @@
   window.addEventListener('resize', resize);
   resize();
   buildGames();
+  refreshName();
   requestAnimationFrame(frame);
 
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
