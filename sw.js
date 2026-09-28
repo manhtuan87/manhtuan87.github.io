@@ -4,7 +4,7 @@
    everything else goes to the network (or to each game's own worker, which takes over
    once that game has been opened). Only caches named "land-..." are ever deleted here.
    Bump VERSION whenever the menu changes. */
-var VERSION = 'land-v1';
+var VERSION = 'land-v2';
 var FONTS = 'land-fonts';
 var FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest', 'offline.html',
@@ -14,7 +14,8 @@ var FILES = [
 // icons of the games, shown on the menu (add one line per new game)
 var GAME_ICONS = [
   '/kero-mogumogu/icons/icon-192.png',
-  '/kero-piyopiyo/icons/icon-192.png'
+  '/kero-piyopiyo/icons/icon-192.png',
+  '/kero-gungun/icons/icon-192.png'
 ];
 
 var BASE = new URL('./', self.location).href;
