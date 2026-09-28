@@ -105,6 +105,7 @@
   }
 
   function draw() {
+    if (!(view.s > 0)) return;   // (a window with no size yet)
     drawBackground();
     var c = ctx, sc = scene, t = sc.t, f = sc.crit;
     worldTransform(c);
@@ -260,8 +261,28 @@
   refreshName();
   requestAnimationFrame(frame);
 
+  // Offline play and updates. A new version of the menu, and of every game already on the phone, is looked
+  // for whenever the menu is opened or comes back to the front, so a game opened from here is the newest one.
+  // When the menu itself has a new version, the page reloads itself (unless the name panel is open).
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    navigator.serviceWorker.register('sw.js').catch(function () {});
+    var swHad = !!navigator.serviceWorker.controller, swNew = false;
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function () {});
+    var swCheck = function () {
+      if (document.hidden || !navigator.onLine) return;
+      navigator.serviceWorker.getRegistrations().then(function (rs) {
+        rs.forEach(function (r) { r.update().catch(function () {}); });
+      }).catch(function () {});
+    };
+    setTimeout(swCheck, 1500);
+    document.addEventListener('visibilitychange', swCheck);
+    window.addEventListener('pageshow', function (e) { if (e.persisted) swCheck(); });
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (swHad) swNew = true;   // (not the first time the menu is stored)
+      swHad = true;
+    });
+    setInterval(function () {
+      if (swNew && !document.hidden && !document.querySelector('.panel.on')) { swNew = false; location.reload(); }
+    }, 700);
   }
   setTimeout(prepareGames, 2500);
 }());

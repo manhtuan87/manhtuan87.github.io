@@ -3,8 +3,10 @@
    It only answers requests for the menu's own files and the game icons it shows;
    everything else goes to the network (or to each game's own worker, which takes over
    once that game has been opened). Only caches named "land-..." are ever deleted here.
-   Bump VERSION whenever the menu changes. */
-var VERSION = 'land-v3';
+   Bump VERSION whenever the menu changes. The menu looks for new versions (of itself and of
+   every game) whenever it is opened or comes back to the front; new files are fetched straight
+   from the server, never from the browser's own cache. */
+var VERSION = 'land-v4';
 var FONTS = 'land-fonts';
 var FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest', 'offline.html',
@@ -21,11 +23,15 @@ var GAME_ICONS = [
 var BASE = new URL('./', self.location).href;
 var OWN = FILES.concat(GAME_ICONS).map(function (f) { return new URL(f, BASE).href; });
 
+// A file straight from the server, not from the browser's own cache (GitHub Pages lets browsers
+// keep files for 10 minutes, which could otherwise put old files into a new version).
+function fresh(f) { return new Request(f, { cache: 'reload' }); }
+
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSION)
     .then(function (c) {
-      return c.addAll(FILES).then(function () {
-        return Promise.all(GAME_ICONS.map(function (u) { return c.add(u).catch(function () {}); }));
+      return c.addAll(FILES.map(fresh)).then(function () {
+        return Promise.all(GAME_ICONS.map(function (u) { return c.add(fresh(u)).catch(function () {}); }));
       });
     })
     .then(function () { return self.skipWaiting(); }));
@@ -49,7 +55,7 @@ self.addEventListener('fetch', function (e) {
     if (OWN.indexOf(key) >= 0) {
       e.respondWith(caches.open(VERSION).then(function (c) {
         return c.match(req, { ignoreSearch: true }).then(function (hit) {
-          var net = fetch(req).then(function (res) {
+          var net = fetch(req.url, { cache: 'no-cache' }).then(function (res) {
             if (res.ok) c.put(req, res.clone());
             return res;
           }).catch(function () { return hit; });
