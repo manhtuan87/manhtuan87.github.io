@@ -150,7 +150,7 @@
       var img = document.createElement('img');
       img.src = g.icon; img.alt = '';
       var nm = document.createElement('span');
-      nm.className = 'game-name'; nm.textContent = g.name;
+      nm.className = 'game-name'; nm.textContent = L(g.name);
       a.appendChild(img); a.appendChild(nm);
       a.addEventListener('click', function (e) {
         e.preventDefault();
@@ -204,7 +204,8 @@
 
   var ICONS = {
     install: '<path d="M12 4v10M7.5 9.5 12 14l4.5-4.5M5 19h14"/>',
-    pencil: '<path d="M4.5 19.5l1.2-4.4L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.9 18.3z"/><path d="M13.6 7.2l3.2 3.2"/>'
+    pencil: '<path d="M4.5 19.5l1.2-4.4L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.9 18.3z"/><path d="M13.6 7.2l3.2 3.2"/>',
+    globe: '<circle cx="12" cy="12" r="8.6"/><path d="M3.6 12h16.8M12 3.4c2.5 2.4 3.7 5.3 3.7 8.6s-1.2 6.2-3.7 8.6c-2.5-2.4-3.7-5.3-3.7-8.6s1.2-6.2 3.7-8.6z"/>'
   };
   document.querySelectorAll('[data-icon]').forEach(function (el) {
     el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[el.getAttribute('data-icon')] + '</svg>';
@@ -227,8 +228,8 @@
   function setName(v) { try { if (v) localStorage.setItem(NAME_KEY, v); else localStorage.removeItem(NAME_KEY); } catch (e) { /* ignore */ } }
   function refreshName() {
     var n = getName();
-    $('name-label').textContent = n || 'なまえ';
-    $('sub').textContent = n ? n + '、ゲームを えらんでね！' : 'あそびたい ゲームを えらんでね！';
+    $('name-label').textContent = n || L('なまえ');
+    $('sub').textContent = n ? L('{name}、ゲームを えらんでね！', { name: n }) : L('あそびたい ゲームを えらんでね！');
   }
   $('btn-name').addEventListener('click', function () {
     click();
@@ -244,6 +245,31 @@
     scene.crit.mode = 'happy'; scene.crit.mt = 0;
   });
 
+  // ---------------------------------------------------------------- language, shared by every game on the site
+  // Saved here like the nickname ('kero-lang'); every game reads it when it starts (js/lang.js).
+
+  // The big title in the chosen language: every letter hops on its own.
+  var LOGO_COLORS = ['#86d65c', '#ff8fc0', '#ffb347', '#6cc6ff', '#b58cff', '#ffd23d', '#ff8fc0', '#6cc6ff'];
+  function buildLogo() { Lang.logo(document.querySelector('.logo'), Lang.pick(LAND_LOGO), LOGO_COLORS); }
+  function buildLangs() {
+    var box = $('lang-list');
+    Lang.LIST.forEach(function (l) {
+      var b = document.createElement('button');
+      b.className = 'btn lang-item' + (l.id === Lang.cur ? ' on' : '');
+      b.lang = l.id;
+      b.textContent = l.name;
+      b.addEventListener('click', function () {
+        click();
+        if (l.id === Lang.cur) { $('lang-panel').classList.remove('on'); return; }
+        Lang.set(l.id);
+        location.reload();   // (the whole page starts again in the new language)
+      });
+      box.appendChild(b);
+    });
+  }
+  $('btn-lang').addEventListener('click', function () { click(); $('lang-panel').classList.add('on'); });
+  $('lang-close').addEventListener('click', function () { click(); $('lang-panel').classList.remove('on'); });
+
   // ---------------------------------------------------------------- start
 
   var lastT = 0;
@@ -257,6 +283,9 @@
 
   window.addEventListener('resize', resize);
   resize();
+  buildLogo();
+  Lang.apply();
+  buildLangs();
   buildGames();
   refreshName();
   requestAnimationFrame(frame);

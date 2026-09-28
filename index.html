@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Jua&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,7 +27,10 @@
     <div class="island-space" aria-hidden="true"></div>
     <div id="games" class="games"></div>
   </div>
-  <button id="btn-name" class="btn small name-btn"><span class="ic" data-icon="pencil"></span><span id="name-label">なまえ</span></button>
+  <div class="top-left">
+    <button id="btn-lang" class="btn small icon" aria-label="ことば"><span class="ic" data-icon="globe"></span></button>
+    <button id="btn-name" class="btn small name-btn"><span class="ic" data-icon="pencil"></span><span id="name-label">なまえ</span></button>
+  </div>
   <button id="btn-install" class="btn small install" hidden><span class="ic" data-icon="install"></span>ホームに ついか</button>
   <div id="name-panel" class="panel">
     <div class="panel-card">
@@ -40,7 +43,17 @@
       </div>
     </div>
   </div>
+  <div id="lang-panel" class="panel">
+    <div class="panel-card">
+      <div class="panel-title">ことばを えらんでね</div>
+      <p class="panel-note">ぜんぶの ゲームが この ことばに なるよ</p>
+      <div id="lang-list" class="lang-list"></div>
+      <div class="panel-row"><button id="lang-close" class="btn">とじる</button></div>
+    </div>
+  </div>
 </div>
+<script src="js/lang.js"></script>
+<script src="js/lang-text.js"></script>
 <script src="js/draw.js"></script>
 <script src="js/land.js"></script>
 </body>

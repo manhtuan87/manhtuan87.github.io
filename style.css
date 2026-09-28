@@ -1,7 +1,7 @@
 :root {
   --ink: #5a3825;
   --cream: #fffaf2;
-  --font: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', 'Noto Sans JP', sans-serif;
+  --font: 'M PLUS Rounded 1c', 'Jua', 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', 'Noto Sans JP', sans-serif;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
@@ -26,8 +26,10 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
 .btn svg { width: 20px; height: 20px; display: block; }
 .btn .ic { display: inline-flex; }
 .btn.small { height: 40px; font-size: 14px; padding: 0 12px; }
+.btn.small.icon { width: 40px; padding: 0; }
+.top-left { position: absolute; left: 12px; top: 12px; display: flex; gap: 6px; }
 #btn-install { position: absolute; right: 12px; top: 12px; }
-.name-btn { position: absolute; left: 12px; top: 12px; max-width: 190px; }
+.name-btn { max-width: 150px; }
 .name-btn #name-label { overflow: hidden; text-overflow: ellipsis; }
 
 /* the whole menu scrolls: logo, the island (drawn on the canvas behind) and the games */
@@ -44,14 +46,9 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
   animation: hop 2.6s ease-in-out infinite; animation-delay: calc(var(--d) * .12s);
 }
 .logo .l2 b { font-size: 64px; }
-.logo .l1 b:nth-child(1) { color: #86d65c; }
-.logo .l1 b:nth-child(2) { color: #ff8fc0; }
-.logo .l1 b:nth-child(3) { color: #ffb347; }
-.logo .l1 b:nth-child(4) { color: #6cc6ff; }
-.logo .l1 b:nth-child(5) { color: #b58cff; }
-.logo .l2 b:nth-child(1) { color: #ffd23d; }
-.logo .l2 b:nth-child(2) { color: #ff8fc0; }
-.logo .l2 b:nth-child(3) { color: #6cc6ff; }
+.logo.latin b { font-size: 58px; }
+.logo.latin .l2 b { font-size: 62px; }
+.logo b.gap { width: .3em; }
 .sub {
   position: relative; margin: 16px auto 0; width: max-content; max-width: 330px; text-align: center;
   padding: 7px 16px; font-size: 16px; font-weight: 800;
@@ -96,3 +93,9 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
 .name-input { font: 800 22px var(--font); color: var(--ink); padding: 8px 12px; border: 3px solid var(--ink); border-radius: 14px; background: #fff; width: 100%; }
 .panel-row { display: flex; justify-content: center; gap: 12px; }
 .btn.ok { background: linear-gradient(#e2f9d3, #a9e38a); min-width: 110px; }
+
+/* ---------- language ---------- */
+.lang-list { display: flex; flex-direction: column; gap: 10px; padding: 2px 10px 6px; }
+.lang-item { height: 52px; font-size: 21px; }
+.lang-item.on { background: linear-gradient(#e2f9d3, #a9e38a); }
+.lang-item.on::after { content: "✓"; margin-left: 4px; }
