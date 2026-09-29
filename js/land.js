@@ -152,7 +152,9 @@
       img.src = g.icon; img.alt = '';
       var nm = document.createElement('span');
       nm.className = 'game-name'; nm.textContent = L(g.name);
-      a.appendChild(img); a.appendChild(nm);
+      g.verEl = document.createElement('span');   // (the version, filled in by showVersions)
+      g.verEl.className = 'game-ver';
+      a.appendChild(img); a.appendChild(nm); a.appendChild(g.verEl);
       a.addEventListener('click', function (e) {
         e.preventDefault();
         click();
@@ -206,11 +208,13 @@
   var ICONS = {
     install: '<path d="M12 4v10M7.5 9.5 12 14l4.5-4.5M5 19h14"/>',
     pencil: '<path d="M4.5 19.5l1.2-4.4L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.9 18.3z"/><path d="M13.6 7.2l3.2 3.2"/>',
-    globe: '<circle cx="12" cy="12" r="8.6"/><path d="M3.6 12h16.8M12 3.4c2.5 2.4 3.7 5.3 3.7 8.6s-1.2 6.2-3.7 8.6c-2.5-2.4-3.7-5.3-3.7-8.6s1.2-6.2 3.7-8.6z"/>'
+    globe: '<circle cx="12" cy="12" r="8.6"/><path d="M3.6 12h16.8M12 3.4c2.5 2.4 3.7 5.3 3.7 8.6s-1.2 6.2-3.7 8.6c-2.5-2.4-3.7-5.3-3.7-8.6s1.2-6.2 3.7-8.6z"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>'
   };
-  document.querySelectorAll('[data-icon]').forEach(function (el) {
-    el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[el.getAttribute('data-icon')] + '</svg>';
-  });
+  function svg(name) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
+  }
+  document.querySelectorAll('[data-icon]').forEach(function (el) { el.innerHTML = svg(el.getAttribute('data-icon')); });
   var installEvt = null;
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; $('btn-install').hidden = false; });
   $('btn-install').addEventListener('click', function () {
@@ -221,30 +225,142 @@
   });
   window.addEventListener('appinstalled', function () { $('btn-install').hidden = true; });
 
-  // ---------------------------------------------------------------- nickname, shared by every game on the site
-  // Saved once here; the games read the same key ('kero-name') and show it on their title screens.
+  // ---------------------------------------------------------------- players, shared by every game on the site
+  // Chosen here: every game starts with the player chosen (a game can switch players too, and edit them). The list
+  // is kept by js/accounts.js ('kero-users'); each game keeps its records per player. No password here (the user's
+  // choice); removing a player asks for a second tap.
 
-  var NAME_KEY = 'kero-name', NAME_MAX = 10;
-  function getName() { try { return (localStorage.getItem(NAME_KEY) || '').trim().slice(0, NAME_MAX); } catch (e) { return ''; } }
-  function setName(v) { try { if (v) localStorage.setItem(NAME_KEY, v); else localStorage.removeItem(NAME_KEY); } catch (e) { /* ignore */ } }
-  function refreshName() {
-    var n = getName();
-    $('name-label').textContent = n || L('なまえ');
-    $('sub').textContent = n ? L('{name}、ゲームを えらんでね！', { name: n }) : L('あそびたい ゲームを えらんでね！');
+  var editing = null, delArmed = false;
+  // The first time: the players that あたま ぐんぐん and みるみる had of their own join the shared list, so they are
+  // all here at once (each game moves its records to the shared players when it is opened; see Accounts.adopt).
+  (function adoptGames() {
+    ['kero-gungun-v1', 'kero-mirumiru-v1'].forEach(function (key) {
+      var s = null;
+      try { s = JSON.parse(localStorage.getItem(key)); } catch (e) { s = null; }
+      if (!s || s.shared || !Array.isArray(s.users)) return;
+      Accounts.adopt(s.users.map(function (u) {
+        return { id: u && u.id, name: u && u.name, type: u && u.type, color: u && u.color };
+      }));
+    });
+  }());
+  function panel(id, on) { $(id).classList.toggle('on', on); }
+  function typeName(u) { return L(u.type === 'adult' ? 'おとな' : 'こども'); }
+  function refreshUser() {
+    var u = Accounts.cur(), many = Accounts.list().length > 1;
+    $('user-dot').style.background = Accounts.COLORS[u.color];
+    $('user-label').textContent = u.name || L(many ? 'なまえなし' : 'なまえ');
+    $('sub').textContent = u.name ? L('{name}、ゲームを えらんでね！', { name: u.name }) : L('あそびたい ゲームを えらんでね！');
   }
-  $('btn-name').addEventListener('click', function () {
-    click();
-    $('name-input').value = getName();
-    $('name-panel').classList.add('on');
+  function buildUsers() {
+    var box = $('user-list'), now = Accounts.cur().id, list = Accounts.list();
+    box.innerHTML = '';
+    list.forEach(function (u) {
+      var row = document.createElement('div');
+      row.className = 'user-row';
+      var b = document.createElement('button');
+      b.className = 'btn user-pick' + (u.id === now ? ' on' : '');
+      b.innerHTML = '<i class="udot" style="background:' + Accounts.COLORS[u.color] + '"></i>';
+      var nm = document.createElement('span');
+      nm.className = 'uname'; nm.textContent = u.name || L('なまえなし');
+      var ty = document.createElement('small');
+      ty.textContent = typeName(u);
+      b.appendChild(nm); b.appendChild(ty);
+      b.addEventListener('click', function () {
+        click();
+        Accounts.setCur(u.id);
+        refreshUser();
+        panel('users-panel', false);
+        scene.crit.mode = 'happy'; scene.crit.mt = 0;
+      });
+      var e = document.createElement('button');
+      e.className = 'btn small icon user-edit';
+      e.setAttribute('aria-label', L('なおす'));
+      e.innerHTML = svg('pencil');
+      e.addEventListener('click', function () { click(); openEdit(u); });
+      row.appendChild(b); row.appendChild(e);
+      box.appendChild(row);
+    });
+    $('user-add').hidden = list.length >= Accounts.MAX;
+  }
+  function openEdit(u) {
+    delArmed = false;
+    var used = Accounts.list().map(function (x) { return x.color; }), free = 0;
+    while (used.indexOf(free) >= 0 && free < Accounts.COLORS.length - 1) free++;
+    editing = u ? { id: u.id, name: u.name, type: u.type, color: u.color } : { id: null, name: '', type: 'kid', color: free };
+    $('ue-name').value = editing.name;
+    $('ue-del').hidden = !u || Accounts.list().length <= 1;
+    $('ue-del').textContent = L('けす');
+    renderEdit();
+    panel('users-panel', false);
+    panel('uedit-panel', true);
+  }
+  function renderEdit() {
+    document.querySelectorAll('#ue-type button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-v') === editing.type); });
+    var sw = $('ue-color');
+    sw.innerHTML = '';
+    Accounts.COLORS.forEach(function (c, i) {
+      var b = document.createElement('button');
+      b.style.background = c;
+      b.className = editing.color === i ? 'on' : '';
+      b.setAttribute('aria-label', String(i + 1));
+      b.addEventListener('click', function () { click(); editing.color = i; renderEdit(); });
+      sw.appendChild(b);
+    });
+  }
+  function backToUsers() { panel('uedit-panel', false); buildUsers(); panel('users-panel', true); refreshUser(); }
+  $('btn-user').addEventListener('click', function () { click(); Accounts.reload(); buildUsers(); panel('users-panel', true); });
+  $('users-close').addEventListener('click', function () { click(); panel('users-panel', false); });
+  $('user-add').addEventListener('click', function () { click(); openEdit(null); });
+  document.querySelectorAll('#ue-type button').forEach(function (b) {
+    b.addEventListener('click', function () { click(); editing.type = b.getAttribute('data-v'); renderEdit(); });
   });
-  $('name-cancel').addEventListener('click', function () { click(); $('name-panel').classList.remove('on'); });
-  $('name-ok').addEventListener('click', function () {
+  $('ue-cancel').addEventListener('click', function () { click(); backToUsers(); });
+  $('ue-ok').addEventListener('click', function () {
     click();
-    setName($('name-input').value.trim().slice(0, NAME_MAX));
-    $('name-panel').classList.remove('on');
-    refreshName();
-    scene.crit.mode = 'happy'; scene.crit.mt = 0;
+    var name = $('ue-name').value.trim().slice(0, Accounts.NAME_MAX);
+    if (editing.id) Accounts.update(editing.id, { name: name, type: editing.type, color: editing.color });
+    else Accounts.add(name, editing.type, editing.color);
+    backToUsers();
   });
+  $('ue-del').addEventListener('click', function () {
+    click();
+    if (!delArmed) { delArmed = true; $('ue-del').textContent = L('もう一度 おすと けすよ'); return; }
+    Accounts.remove(editing.id);
+    backToUsers();
+  });
+  // (a game may have switched or edited the players meanwhile)
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { Accounts.reload(); refreshUser(); showVersions(); } });
+
+  // ---------------------------------------------------------------- versions: the one on this phone (each app's sw.js
+  // answers), or, for a game not stored yet (and on the PC), the newest on the site
+
+  function askVersion(worker) {
+    return new Promise(function (ok) {
+      if (!worker || typeof MessageChannel === 'undefined') { ok(null); return; }
+      var ch = new MessageChannel(), t = setTimeout(function () { ok(null); }, 1500);
+      ch.port1.onmessage = function (e) { clearTimeout(t); ok(typeof e.data === 'string' ? e.data : null); };
+      try { worker.postMessage('version', [ch.port2]); } catch (e) { clearTimeout(t); ok(null); }
+    });
+  }
+  function siteVersion(url) {
+    return fetch(new URL('sw.js', new URL(url, location.href)).href, { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (t) { var m = /var VERSION = '([^']+)'/.exec(t); return m ? m[1] : null; })
+      .catch(function () { return null; });
+  }
+  function verText(v) { var m = /-v(\d+)$/.exec(v || ''); return m ? 'v' + m[1] : ''; }
+  function showVersions() {
+    var sw = 'serviceWorker' in navigator && location.protocol === 'https:';
+    (sw ? navigator.serviceWorker.getRegistrations() : Promise.resolve([])).catch(function () { return []; }).then(function (rs) {
+      var apps = [{ url: './', el: $('land-ver'), name: L('ケロちゃん ランド') }].concat(GAMES.map(function (g) { return { url: g.url, el: g.verEl }; }));
+      apps.forEach(function (a) {
+        var scope = new URL(a.url, location.href).href, r = rs.filter(function (x) { return x.scope === scope; })[0];
+        askVersion(r && r.active).then(function (v) { return v || siteVersion(a.url); }).then(function (v) {
+          if (v && verText(v)) a.el.textContent = (a.name ? a.name + ' ' : '') + verText(v);
+        });
+      });
+    });
+  }
 
   // ---------------------------------------------------------------- language, shared by every game on the site
   // Saved here like the nickname ('kero-lang'); every game reads it when it starts (js/lang.js).
@@ -288,7 +404,8 @@
   Lang.apply();
   buildLangs();
   buildGames();
-  refreshName();
+  refreshUser();
+  showVersions();
   requestAnimationFrame(frame);
 
   // Offline play and updates. A new version of the menu, and of every game already on the phone, is looked
@@ -300,8 +417,8 @@
     var swCheck = function () {
       if (document.hidden || !navigator.onLine) return;
       navigator.serviceWorker.getRegistrations().then(function (rs) {
-        rs.forEach(function (r) { r.update().catch(function () {}); });
-      }).catch(function () {});
+        return Promise.all(rs.map(function (r) { return r.update().catch(function () {}); }));
+      }).then(function () { setTimeout(showVersions, 3000); }).catch(function () {});   // (a new version may have come)
     };
     setTimeout(swCheck, 1500);
     document.addEventListener('visibilitychange', swCheck);

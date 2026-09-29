@@ -29,8 +29,9 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
 .btn.small.icon { width: 40px; padding: 0; }
 .top-left { position: absolute; left: 12px; top: 12px; display: flex; gap: 6px; }
 #btn-install { position: absolute; right: 12px; top: 12px; }
-.name-btn { max-width: 150px; }
-.name-btn #name-label { overflow: hidden; text-overflow: ellipsis; }
+.user-btn { max-width: 170px; gap: 6px; padding: 0 12px 0 8px; }
+.user-btn #user-label { overflow: hidden; text-overflow: ellipsis; }
+.udot { display: inline-block; width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid var(--ink); flex: none; }
 
 /* the whole menu scrolls: logo, the island (drawn on the canvas behind) and the games */
 .scroller { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; touch-action: pan-y; scrollbar-width: none; }
@@ -75,6 +76,9 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
   border: 3px solid var(--ink); background: #fff; box-shadow: 0 3px 0 rgba(90, 56, 37, .25);
 }
 .game-name { font-size: 17px; font-weight: 800; line-height: 1.25; text-align: center; white-space: pre-line; }
+.game { position: relative; }
+.game-ver { position: absolute; right: 13px; bottom: 7px; font-size: 11px; font-weight: 800; opacity: .55; }
+.land-ver { position: relative; margin: -16px 0 22px; text-align: center; font-size: 12px; font-weight: 800; opacity: .6; min-height: 14px; }
 
 @keyframes hop { 0%, 55%, 100% { transform: translateY(0); } 25% { transform: translateY(-9px) rotate(-5deg); } 40% { transform: translateY(1px); } }
 
@@ -99,3 +103,24 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
 .lang-item { height: 52px; font-size: 21px; }
 .lang-item.on { background: linear-gradient(#e2f9d3, #a9e38a); }
 .lang-item.on::after { content: "✓"; margin-left: 4px; }
+
+/* ---------- players (shared by every game) ---------- */
+.user-list { display: flex; flex-direction: column; gap: 8px; }
+.user-row { display: flex; align-items: center; gap: 8px; }
+.user-pick { flex: 1; min-width: 0; height: 54px; justify-content: flex-start; gap: 8px; padding: 0 10px; font-size: 18px; }
+.user-pick .udot { width: 26px; height: 26px; }
+.user-pick .uname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-pick small { margin-left: auto; flex: none; font-size: 11px; opacity: .7; }
+.user-pick.on { background: linear-gradient(#fff6b8, #ffd84d); }
+.user-edit { flex: none; }
+.add-btn { height: 46px; font-size: 16px; gap: 6px; }
+.seg { display: flex; gap: 6px; }
+.seg button {
+  flex: 1; height: 44px; cursor: pointer; font: 800 17px/1 var(--font); color: var(--ink);
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px;
+}
+.seg button.on { background: linear-gradient(#fff6b8, #ffd84d); }
+.swatches { display: flex; gap: 8px; justify-content: center; }
+.swatches button { width: 34px; height: 34px; padding: 0; cursor: pointer; border-radius: 50%; border: 3px solid var(--ink); }
+.swatches button.on { outline: 3px solid #ff6fa8; outline-offset: 2px; }
+.del-btn { align-self: center; height: 38px; font-size: 14px; }

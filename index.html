@@ -26,21 +26,33 @@
     <p id="sub" class="sub">あそびたい ゲームを えらんでね！</p>
     <div class="island-space" aria-hidden="true"></div>
     <div id="games" class="games"></div>
+    <p id="land-ver" class="land-ver"></p>
   </div>
   <div class="top-left">
     <button id="btn-lang" class="btn small icon" aria-label="ことば"><span class="ic" data-icon="globe"></span></button>
-    <button id="btn-name" class="btn small name-btn"><span class="ic" data-icon="pencil"></span><span id="name-label">なまえ</span></button>
+    <button id="btn-user" class="btn small user-btn"><i id="user-dot" class="udot"></i><span id="user-label">なまえ</span></button>
   </div>
   <button id="btn-install" class="btn small install" hidden><span class="ic" data-icon="install"></span>ホームに ついか</button>
-  <div id="name-panel" class="panel">
+  <div id="users-panel" class="panel">
     <div class="panel-card">
-      <div class="panel-title">なまえ（ニックネーム）</div>
-      <p class="panel-note">ぜんぶの ゲームに でるよ</p>
-      <input id="name-input" class="name-input" type="text" maxlength="10" autocomplete="off" placeholder="れい：はなこちゃん">
+      <div class="panel-title">だれが あそぶ？</div>
+      <p class="panel-note">えらんだ 人で ぜんぶの ゲームを あそぶよ</p>
+      <div id="user-list" class="user-list"></div>
+      <button id="user-add" class="btn add-btn"><span class="ic" data-icon="plus"></span>ユーザーを ふやす</button>
+      <div class="panel-row"><button id="users-close" class="btn">とじる</button></div>
+    </div>
+  </div>
+  <div id="uedit-panel" class="panel">
+    <div class="panel-card">
+      <div class="panel-title">ユーザーの せってい</div>
+      <input id="ue-name" class="name-input" type="text" maxlength="10" autocomplete="off" placeholder="れい：はなこちゃん">
+      <div id="ue-type" class="seg"><button data-v="kid">こども</button><button data-v="adult">おとな</button></div>
+      <div id="ue-color" class="swatches"></div>
       <div class="panel-row">
-        <button id="name-cancel" class="btn">やめる</button>
-        <button id="name-ok" class="btn ok">OK</button>
+        <button id="ue-cancel" class="btn">やめる</button>
+        <button id="ue-ok" class="btn ok">OK</button>
       </div>
+      <button id="ue-del" class="btn del-btn">けす</button>
     </div>
   </div>
   <div id="lang-panel" class="panel">
@@ -54,6 +66,7 @@
 </div>
 <script src="js/lang.js"></script>
 <script src="js/lang-text.js"></script>
+<script src="js/accounts.js"></script>
 <script src="js/draw.js"></script>
 <script src="js/land.js"></script>
 </body>

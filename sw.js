@@ -6,11 +6,11 @@
    Bump VERSION whenever the menu changes. The menu looks for new versions (of itself and of
    every game) whenever it is opened or comes back to the front; new files are fetched straight
    from the server, never from the browser's own cache. */
-var VERSION = 'land-v8';
+var VERSION = 'land-v9';
 var FONTS = 'land-fonts';
 var FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest', 'offline.html',
-  'js/lang.js', 'js/lang-text.js', 'js/draw.js', 'js/land.js',
+  'js/lang.js', 'js/lang-text.js', 'js/accounts.js', 'js/draw.js', 'js/land.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];
 // icons of the games, shown on the menu (add one line per new game)
@@ -43,6 +43,11 @@ self.addEventListener('activate', function (e) {
     return Promise.all(keys.filter(function (k) { return k.indexOf('land-') === 0 && k !== VERSION && k !== FONTS; })
       .map(function (k) { return caches.delete(k); }));
   }).then(function () { return self.clients.claim(); }));
+});
+
+// ケロちゃん ランド (the menu) asks which version is on the phone, and shows it.
+self.addEventListener('message', function (e) {
+  if (e.data === 'version' && e.ports && e.ports[0]) e.ports[0].postMessage(VERSION);
 });
 
 self.addEventListener('fetch', function (e) {
