@@ -15,6 +15,7 @@
 - ゲームの カードの 右下と 画面の いちばん下に、スマホに 入っている 版の 番号（各 `sw.js` の `VERSION`、例：v9）が 出ます（Service Worker に たずね、まだ 入っていなければ サイトの `sw.js` を 見ます）
 - 左上の 地球のボタンで ことば（日本語・Tiếng Việt・English。한국어は いったん 止めています）を えらぶと、メニューと ぜんぶのゲームが その ことばに なります（`kero-lang`。声は 日本語だけ ずんだもん、ほかの ことばは スマホの 読み上げ）。文言は各アプリの `js/lang.js`（共通）と `js/lang-text.js`（訳）
 - メニューは画面全体がスクロールします（ゲームが増えても下まで見られます）
+- 右上の 🔊 ボタンで、メニューの タッチの 音を 消したり 戻したり できます（この端末に 保存：`kero-land-sfx`）。ゲームの 音は、各ゲームの タイトル画面の 音の ボタンと、ほかの 画面の 右上の 🔊 で
 
 ## ゲームを ふやすとき
 
@@ -26,6 +27,7 @@
 6. ゲームの `sw.js` に、メニューが 版を たずねる メッセージへの 返事を 入れる（メニューは `GAMES` の `url` の Service Worker に たずね、まだ なければ その `sw.js` の `VERSION` を 読みます）：
    `self.addEventListener('message', function (e) { if (e.data === 'version' && e.ports && e.ports[0]) e.ports[0].postMessage(VERSION); });`
 7. `js/accounts.js` を コピーして入れ（`sw.js` の `FILES` にも）、`Accounts.cur()` の 人で あそぶ。記録は ユーザーの id（`k1`、`k2`…）ごとに 分けて保存する（もぐもぐ・ぴよぴよポンの `save` と同じ）
+8. 音の ボタン：タイトル画面には 音の しゅるいごとの ボタン、ほかの ぜんぶの 画面の 右上には 🔊（`<button class="btn icon small snd-btn">`）。`js/sound-panel.js`（全ゲームで 同じ ファイル）を コピーして入れ（`sw.js` の `FILES` にも）、`SoundPanel.init()` で スイッチを わたし、画面が かわるときに `SoundPanel.hide()`、窓を 開いている あいだは ゲームを 止める（`SoundPanel.isOpen()`。もぐもぐ・ぴよぴよポンの `frame()` と 同じ）。見た目は ほかの ゲームの `style.css` の「the 🔊 button on every screen」を コピー
 
 ## PC で試す
 

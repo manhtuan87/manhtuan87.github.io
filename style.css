@@ -28,7 +28,12 @@ input { -webkit-user-select: text; user-select: text; touch-action: auto; }
 .btn.small { height: 40px; font-size: 14px; padding: 0 12px; }
 .btn.small.icon { width: 40px; padding: 0; }
 .top-left { position: absolute; left: 12px; top: 12px; display: flex; gap: 6px; }
-#btn-install { position: absolute; right: 12px; top: 12px; }
+/* top right: the 🔊 that switches the tap sound; before the menu is on the phone's home screen,
+   "add to Home" shows next to it (smaller, and the name button leaves it room) */
+.top-right { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.btn.off { opacity: .55; }
+#btn-install { max-width: 118px; padding: 0 10px 0 8px; gap: 4px; font-size: 12px; line-height: 1.1; white-space: normal; word-break: keep-all; text-align: left; }
+#stage:has(#btn-install:not([hidden])) .user-btn { max-width: 118px; }
 .user-btn { max-width: 170px; gap: 6px; padding: 0 12px 0 8px; }
 .user-btn #user-label { overflow: hidden; text-overflow: ellipsis; }
 .udot { display: inline-block; width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid var(--ink); flex: none; }

@@ -128,8 +128,11 @@
   var ac = null;
   // (silent on the PC, localhost, so trying the site there makes no sound)
   var QUIET = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  // The 🔊 at the top right switches the tap sound off and on (kept on the phone; each game has its own switches).
+  var SFX_KEY = 'kero-land-sfx';
+  var sfxOn = (function () { try { return localStorage.getItem(SFX_KEY) !== '0'; } catch (e) { return true; } }());
   function click() {
-    if (QUIET) return;
+    if (QUIET || !sfxOn) return;
     try {
       if (!ac) { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; ac = new AC(); }
       var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
@@ -209,6 +212,8 @@
     install: '<path d="M12 4v10M7.5 9.5 12 14l4.5-4.5M5 19h14"/>',
     pencil: '<path d="M4.5 19.5l1.2-4.4L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.9 18.3z"/><path d="M13.6 7.2l3.2 3.2"/>',
     globe: '<circle cx="12" cy="12" r="8.6"/><path d="M3.6 12h16.8M12 3.4c2.5 2.4 3.7 5.3 3.7 8.6s-1.2 6.2-3.7 8.6c-2.5-2.4-3.7-5.3-3.7-8.6s1.2-6.2 3.7-8.6z"/>',
+    sfx: '<path d="M4 9.5h3.5L12.5 5v14l-5-4.5H4z" fill="currentColor"/><path d="M16 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',
+    sfxOff: '<path d="M4 9.5h3.5L12.5 5v14l-5-4.5H4z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
     plus: '<path d="M12 5v14M5 12h14"/>'
   };
   function svg(name) {
@@ -224,6 +229,20 @@
     installEvt.userChoice.then(function () { installEvt = null; $('btn-install').hidden = true; });
   });
   window.addEventListener('appinstalled', function () { $('btn-install').hidden = true; });
+
+  function refreshSnd() {
+    var b = $('btn-snd');
+    b.querySelector('.ic').innerHTML = svg(sfxOn ? 'sfx' : 'sfxOff');
+    b.classList.toggle('off', !sfxOn);
+    b.setAttribute('aria-pressed', sfxOn ? 'true' : 'false');
+  }
+  $('btn-snd').addEventListener('click', function () {
+    sfxOn = !sfxOn;
+    try { localStorage.setItem(SFX_KEY, sfxOn ? '1' : '0'); } catch (e) { /* not kept */ }
+    refreshSnd();
+    click();   // (heard only when it has just been switched on)
+  });
+  refreshSnd();
 
   // ---------------------------------------------------------------- players, shared by every game on the site
   // Chosen here: every game starts with the player chosen (a game can switch players too, and edit them). The list

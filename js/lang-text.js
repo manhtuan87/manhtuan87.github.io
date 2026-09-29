@@ -17,6 +17,7 @@ Lang.add({
   'れい：はなこちゃん': ['Ví dụ: Na', 'e.g. Hana', '예: 하나'],
   'やめる': ['Thôi', 'Cancel', '취소'],
   'ホームに ついか': ['Thêm vào màn hình', 'Add to Home', '홈 화면에 추가'],
+  'タッチの おと': ['Âm thanh khi chạm', 'Tap sound', '터치 소리'],
   'ことば': ['Ngôn ngữ', 'Language', '언어'],
   'ことばを えらんでね': ['Chọn ngôn ngữ', 'Choose a language', '언어를 골라 주세요'],
   'ぜんぶの ゲームが この ことばに なるよ': ['Mọi trò chơi sẽ dùng ngôn ngữ này', 'Every game will use this language', '모든 게임이 이 언어로 바뀌어요'],

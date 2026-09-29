@@ -6,7 +6,7 @@
    Bump VERSION whenever the menu changes. The menu looks for new versions (of itself and of
    every game) whenever it is opened or comes back to the front; new files are fetched straight
    from the server, never from the browser's own cache. */
-var VERSION = 'land-v9';
+var VERSION = 'land-v10';
 var FONTS = 'land-fonts';
 var FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest', 'offline.html',
