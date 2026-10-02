@@ -25,7 +25,22 @@ Lang.add({
   'ケロちゃん\nもぐもぐ': ['Kero\nMăm Măm', 'Kero\nMunch Munch', '케로\n냠냠'],
   'ケロちゃん\nぴよぴよポン': ['Kero\nChíp Chíp Bùm', 'Kero\nChick Pop', '케로\n삐약삐약 퐁'],
   'ケロちゃん\nあたま ぐんぐん': ['Kero\nLuyện Não', 'Kero\nBrain Boost', '케로\n두뇌 쑥쑥'],
-  'ケロちゃん\nみるみる': ['Kero\nMắt Tinh', 'Kero\nQuick Eyes', '케로\n반짝눈']
+  'ケロちゃん\nみるみる': ['Kero\nMắt Tinh', 'Kero\nQuick Eyes', '케로\n반짝눈'],
+  // moving to the new address (js/move.js; no Korean from 2026-09-30)
+  'ケロちゃん ランドは おひっこし したよ！': ['Thế giới Kero đã chuyển nhà rồi!', 'Kero Land has moved!'],
+  'あたらしい ばしょで あそんでね。きろくも ぜんぶ もっていくよ。': ['Mình chơi ở nhà mới nhé. Thành tích cũng mang theo hết luôn.', 'Play at the new place. All your records come along too.'],
+  'おひっこし する': ['Chuyển nhà', 'Move now'],
+  'あたらしい ばしょを ひらいてね。': ['Mở nhà mới ra chơi nhé.', 'Open the new place.'],
+  'あたらしい ランドを ひらく': ['Mở Thế giới Kero mới', 'Open the new Kero Land'],
+  'きろくを もう いちど おくる': ['Gửi lại thành tích', 'Send the records again'],
+  'おひっこし できたよ！': ['Chuyển nhà xong rồi!', 'All moved in!'],
+  'きろくも ぜんぶ もってきたよ。': ['Thành tích cũng mang sang hết rồi.', 'All your records are here too.'],
+  'この ランドを ホームに ついか して、ふるい ほうは けしてね。': ['Hãy thêm Thế giới Kero này vào màn hình chính, rồi xóa bản cũ nhé.', 'Add this Kero Land to your Home screen, and remove the old one.'],
+  'まえの きろくで うわがき する？': ['Ghi đè bằng thành tích cũ?', 'Replace with the old records?'],
+  'この スマホの あたらしい ランドには もう きろくが あるよ。うわがき すると いまの きろくは きえるよ。': ['Thế giới Kero mới trên máy này đã có thành tích rồi. Nếu ghi đè thì thành tích hiện tại sẽ mất.', 'The new Kero Land on this phone already has records. Replacing them deletes the ones here now.'],
+  'うわがき する': ['Ghi đè', 'Replace'],
+  'きろくを よめなかったよ': ['Không đọc được thành tích', 'Could not read the records'],
+  'まえの ランドで もう いちど「おひっこし する」を おしてね。': ['Hãy mở Thế giới Kero cũ và nhấn “Chuyển nhà” lần nữa nhé.', 'Open the old Kero Land and tap “Move now” again.']
 });
 
 // The big title, one line per row (each letter hops on its own).

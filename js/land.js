@@ -425,6 +425,7 @@
   buildGames();
   refreshUser();
   showVersions();
+  Move.start({ click: click });   // (the moving card: at the old address, or right after moving here; see js/move.js)
   requestAnimationFrame(frame);
 
   // Offline play and updates. A new version of the menu, and of every game already on the phone, is looked
@@ -450,5 +451,6 @@
       if (swNew && !document.hidden && !document.querySelector('.panel.on')) { swNew = false; location.reload(); }
     }, 700);
   }
-  setTimeout(prepareGames, 2500);
+  // (not at the old address, nor while asking whether to replace the records: the games would write records)
+  setTimeout(function () { if (!Move.holds()) prepareGames(); }, 2500);
 }());
